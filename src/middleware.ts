@@ -8,20 +8,16 @@ import { NextResponse } from "next/server";
 export default authMiddleware({
   publicRoutes: ["/", "/api/trpc/example.hello"],
   afterAuth(auth, req, evt) {
-    // redirect them to organization selection page
-    console.log(req.cookies.get("key")?.value);
-    if (
-      auth.userId &&
-      req.cookies.get("key")?.value === "value" &&
-      !req.nextUrl.pathname.includes("/consumer")
-    ) {
-      const orgSelection = new URL("/consumer", req.url);
-      return NextResponse.redirect(orgSelection);
-    }
-    if (!auth.userId && req.nextUrl.pathname.includes("/consumer")) {
-      console.log("Sean");
-      const orgSelection = new URL("/sign-in", req.url);
-      return NextResponse.redirect(orgSelection);
+    // if (
+    //   auth.userId &&
+    //   req.cookies.get("key")?.value === "value" &&
+    //   !req.nextUrl.pathname.includes("/consumer")
+    // ) {
+    //   const orgSelection = new URL("/consumer", req.url);
+    //   return NextResponse.redirect(orgSelection);
+    // }
+    if (!auth.userId && req.nextUrl.pathname.includes("/user")) {
+      return redirectToSignIn({ returnBackUrl: req.url });
     }
   },
 });

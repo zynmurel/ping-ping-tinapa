@@ -1,7 +1,17 @@
-import { SignIn } from "@clerk/nextjs";
+import { SignIn, UserButton } from "@clerk/nextjs";
+import ClerkComponentLayout from "../components/clerkComponentsLayout";
 
-const SignInPage = () => (
-  <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
-);
+const SignInPage = () => {
+  return (
+    <ClerkComponentLayout>
+      <SignIn
+        path="/sign-in"
+        routing="path"
+        signUpUrl="/sign-up"
+        redirectUrl="/user"
+      />
+    </ClerkComponentLayout>
+  );
+};
 
 export default SignInPage;

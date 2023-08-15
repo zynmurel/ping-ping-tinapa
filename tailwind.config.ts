@@ -14,7 +14,13 @@ export default {
         kanit: ["Kanit"],
         rubik: ["Rubik"],
       },
+      height: {
+        "45rem": "38rem",
+      },
     },
   },
   plugins: [],
+  corePlugins: {
+    preflight: false,
+  },
 } satisfies Config;

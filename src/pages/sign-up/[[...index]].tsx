@@ -1,5 +1,10 @@
 import { SignUp } from "@clerk/nextjs";
+import ClerkComponentLayout from "../components/clerkComponentsLayout";
 
 export default function Page() {
-  return <SignUp path="/sign-up" routing="path" signInUrl="/sign-in" />;
+  return (
+    <ClerkComponentLayout>
+      <SignUp path="/sign-up" routing="path" signInUrl="/sign-in" />
+    </ClerkComponentLayout>
+  );
 }
