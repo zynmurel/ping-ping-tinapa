@@ -11,7 +11,12 @@ import { type } from "os";
 const CustomerRegisterForm: React.FC = () => {
   const [disableState, setDisableState] = useState([false, false, false]);
   const { user, isLoaded } = useUser();
-  const { mutate } = api.mutations.addCustomer.useMutation();
+  const { mutate } = api.mutations.addCustomer.useMutation({
+    onSuccess: () => {
+      deleteCookie("user");
+      router.push("/user");
+    },
+  });
   const [form] = Form.useForm();
   const router = useRouter();
 
@@ -45,9 +50,8 @@ const CustomerRegisterForm: React.FC = () => {
     mutate({
       ...e,
       emailID: user?.id,
+      phone: e.phone + "",
     });
-    deleteCookie("user");
-    router.push("/user");
   };
 
   const backButtonSignOutClerk = () => {

@@ -1,22 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { Button, Form, Input, Modal, Select } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, Form, Input, InputNumber, Modal, Select } from "antd";
 import { BiCurrentLocation, BiEdit } from "react-icons/bi";
 import { api } from "~/utils/api";
-import { useUser } from "@clerk/nextjs";
-import { allBarangay } from "../../utils/barangaydatas";
+import { allBarangay } from "../../../utils/barangaydatas";
+import {
+  NotificationContext,
+  UserContext,
+} from "../../../context/contextProvider";
 
 const EditAddressModal: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitAble, setSubmitAble] = useState(true);
   const [form] = Form.useForm();
-  const { user, isLoaded, isSignedIn } = useUser();
+  const { openNotificationWithIcon } = useContext(NotificationContext);
+  const { user, isLoaded, isSignedIn } = useContext(UserContext);
   const { data, isLoading, isError, refetch } = api.queries.getUser.useQuery({
     id: user ? user.id : "",
   });
+  const address = form.getFieldsValue();
   const { mutate } = api.mutations.updateCustomer.useMutation({
     onSuccess: () => {
       setIsModalOpen(false);
       setSubmitAble(true);
+      openNotificationWithIcon("success", "Details Updated");
       refetch();
     },
   });
@@ -41,6 +47,7 @@ const EditAddressModal: React.FC = () => {
       barangay: e.barangay,
       street: e.street,
       placeDetails: e.placeDetails,
+      phone: e.phone + "",
     });
   };
 
@@ -50,6 +57,7 @@ const EditAddressModal: React.FC = () => {
       barangay: data?.barangay,
       street: data?.street,
       placeDetails: data?.placeDetails,
+      phone: data?.phone,
     });
   };
 
@@ -64,10 +72,10 @@ const EditAddressModal: React.FC = () => {
       const check =
         form.getFieldsValue().barangay !== data?.barangay ||
         form.getFieldsValue().street !== data?.street ||
-        form.getFieldsValue().placeDetails !== data?.placeDetails
+        form.getFieldsValue().placeDetails !== data?.placeDetails ||
+        form.getFieldsValue().phone !== data?.phone
           ? false
           : true;
-      console.log(check);
       setSubmitAble(check);
     };
   };
@@ -76,7 +84,7 @@ const EditAddressModal: React.FC = () => {
     <>
       <Button
         onClick={showModal}
-        className="item-center mb-2 flex w-full justify-center rounded-md border border-orange-200 bg-orange-100 p-0 text-left text-lg text-[#023047]"
+        className="item-center mb-2 flex w-full justify-center rounded-md border border-yellow-300 bg-[#fff6dd] p-0 text-left text-lg text-[#023047]"
       >
         <span className=" relative flex">
           <BiCurrentLocation className="absolute -left-6 top-1/2 my-auto  -translate-y-1/2 text-xl text-[#023047]" />
@@ -91,6 +99,21 @@ const EditAddressModal: React.FC = () => {
           onFinish={handelFinish}
           onChange={formChangeChecker()}
         >
+          <span className="flex items-center text-base font-light text-orange-500">
+            <BiEdit className=" my-auto mr-1" />
+            Update
+          </span>
+          <div className=" mb-2 mt-5">
+            <span className=" text-xl font-semibold">Contact Details</span>
+          </div>
+          <div className=" flex  flex-row items-center justify-between gap-2  sm:gap-2">
+            <div className=" m-0 w-2/3 flex-1">
+              <span className="  text-[#023047]">Contact Number</span>
+              <Form.Item name="phone" rules={rules}>
+                <Input placeholder="e.g. 09*********" className=" w-1/2" />
+              </Form.Item>
+            </div>
+          </div>
           <div className=" my-5">
             <span className=" text-xl font-semibold">
               Delivery Address{" "}
@@ -99,11 +122,7 @@ const EditAddressModal: React.FC = () => {
               </span>
             </span>
 
-            <span className="flex items-center text-base font-light text-orange-500">
-              <BiEdit className=" my-auto mr-1" />
-              Update
-            </span>
-            <div className="mt-3 flex  flex-row items-center justify-between gap-2  sm:gap-2">
+            <div className="mt-2 flex  flex-row items-center justify-between gap-2  sm:gap-2">
               <div className=" m-0 w-full flex-1">
                 <span className="  text-[#023047]">City</span>
                 <Form.Item name="city" rules={rules}>

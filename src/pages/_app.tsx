@@ -2,10 +2,25 @@ import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, notification } from "antd";
 import { theme } from "~/utils/providerprops";
+import { NotificationContext } from "./user/context/contextProvider";
+
+type NotificationType = "success" | "info" | "warning" | "error";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (
+    type: NotificationType,
+    message: string,
+    description: string
+  ) => {
+    api[type]({
+      message: message,
+      description: description,
+    });
+  };
   return (
     <ConfigProvider theme={theme}>
       <ClerkProvider
@@ -28,7 +43,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         }}
       >
         <div className="min-w-screen min-h-screen bg-black bg-gradient-to-l from-[#fff4da] to-[#ecbf76] font-sans">
-          <Component {...pageProps} />
+          <NotificationContext.Provider value={{ openNotificationWithIcon }}>
+            {contextHolder}
+            <Component {...pageProps} />
+          </NotificationContext.Provider>
         </div>
       </ClerkProvider>
     </ConfigProvider>

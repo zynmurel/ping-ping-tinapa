@@ -1,7 +1,7 @@
 import { useClerk } from "@clerk/nextjs";
 import { useContext } from "react";
 import PingPingIcon from "~/pages/components/pingping";
-import { UserContext } from "../context/contextProvider";
+import { UserContext } from "../../../context/contextProvider";
 import { Dropdown } from "antd";
 import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
@@ -22,10 +22,14 @@ const Account = () => {
   const items = [
     {
       key: "1",
+      label: <span className=" text-lg">Hello, {`${user?.firstName}`}!</span>,
+    },
+    {
+      key: "3",
       label: (
         <button
           onClick={logOutFunction()}
-          className=" w-40 cursor-pointer rounded-full border border-red-600 bg-red-200 p-2 text-red-500 hover:bg-red-300"
+          className=" w-48 cursor-pointer rounded-full border border-red-600 bg-red-200 p-2 text-red-500 hover:bg-red-300"
         >
           Sign Out
         </button>
