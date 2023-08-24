@@ -42,7 +42,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           },
         }}
       >
-        <div className="min-w-screen min-h-screen bg-black bg-gradient-to-l from-[#fff4da] to-[#ecbf76] font-sans">
+        <div className="min-w-screen min-h-screen overflow-hidden bg-black bg-gradient-to-l from-[#fff4da] to-[#ecbf76] font-sans">
           <NotificationContext.Provider value={{ openNotificationWithIcon }}>
             {contextHolder}
             <Component {...pageProps} />

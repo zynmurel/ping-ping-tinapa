@@ -16,9 +16,13 @@ import { UserContext } from "../context/contextProvider";
 import { api } from "~/utils/api";
 import ProductsCard from "./components/cards/productsCard";
 import MenuCard from "./components/cards/menuCard";
+import MobileView from "./mobileView";
 
 const CustomerPage = () => {
-  const { mutate, data: transactionData } =
+  const router = useRouter();
+  const { data: trData, isLoading: trIsLoading } =
+    api.mutations.findTransaction.useQuery();
+  const { mutateAsync, data: transactionData } =
     api.mutations.findOrAddTransaction.useMutation();
   const [transactionType, setTransactionType] = useState<string | null>(null);
   const [menuActive, setMenuActive] = useState("tinapa");
@@ -44,6 +48,19 @@ const CustomerPage = () => {
     userId: userData ? userData.id : "",
     transactionId: transactionData ? transactionData.id : "",
   });
+
+  useEffect(() => {
+    if (!userData && !isLoading && !isError && user) {
+      deleteCookie("user");
+      router.push("/user");
+    }
+    if (userData && !isLoading && user && !trData && !trIsLoading) {
+      mutateAsync({
+        userId: userData.id,
+      });
+    }
+  }, [userData]);
+
   const tinapa = products?.filter((pr) => pr.category === "TINAPA");
   const pasalubong = products?.filter((pr) => pr.category === "PASALUBONG");
   type Products = {
@@ -63,13 +80,6 @@ const CustomerPage = () => {
     { key: "pasalubong", title: "Pasalubong" },
   ];
   useEffect(() => {
-    if (userData) {
-      mutate({
-        userId: userData.id,
-      });
-    }
-  }, [userData]);
-  useEffect(() => {
     transactionData?.type && setTransactionType(transactionData.type);
   }, [transactionData]);
 
@@ -83,12 +93,12 @@ const CustomerPage = () => {
             <ProductsContext.Provider
               value={{ products, productsLoading, productsError }}
             >
-              <div className="flex min-h-screen flex-col items-center  justify-center gap-1 bg-gradient-to-l from-[#ffffff] to-[#ead399]">
+              <div className="hidden min-h-screen flex-col items-center justify-center  gap-1 bg-gradient-to-l from-[#ffffff] to-[#ead399] sm:flex">
                 <Account />
                 <div className="flex w-full items-center justify-center">
                   <div className=" flex w-11/12 flex-row items-start justify-between rounded-3xl bg-[#ffffff00] p-2 px-5">
                     <div className="flex w-full flex-row gap-3 ">
-                      <div className=" flex w-9/12 flex-col gap-3">
+                      <div className=" flex w-9/12 flex-col gap-3 ">
                         <MenuCard
                           menu={menu}
                           setMenuActive={setMenuActive}
@@ -100,7 +110,7 @@ const CustomerPage = () => {
                           products={products}
                         />
                       </div>
-                      <div className=" flex w-3/12 flex-col gap-3 p-1">
+                      <div className="  flex w-3/12 flex-col gap-3 p-0 ">
                         <TransactionType />
                         <OrderCard />
                       </div>
@@ -108,6 +118,13 @@ const CustomerPage = () => {
                   </div>
                 </div>
               </div>
+              <MobileView
+                menu={menu}
+                setMenuActive={setMenuActive}
+                menuActive={menuActive}
+                menuProducts={menuProducts}
+                products={products}
+              />
             </ProductsContext.Provider>
           </MyOrderContext.Provider>
         </StateContext.Provider>

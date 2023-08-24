@@ -37,31 +37,31 @@ const Account = () => {
     },
   ];
   return (
-    <div className=" -mt-12 flex w-11/12 flex-col rounded-xl bg-[#ffb65600] ">
-      <div className="flex flex-row items-end justify-between  px-2 ">
+    <div className=" mt-2 flex w-full flex-col rounded-xl bg-[#ffb65600] sm:-mt-12 sm:w-11/12 ">
+      <div className="flex flex-row items-center justify-between px-2  sm:items-end ">
         <div>
-          <span className="z-10 flex flex-row font-cavean text-7xl font-black text-white drop-shadow-lg ">
+          <span className="z-10 flex flex-row font-cavean text-3xl font-black text-white drop-shadow-lg sm:text-7xl ">
             <span className="  text-[#023047] ">Ping</span>-
             <span className="  text-[#ffffff]">Ping's</span>
           </span>
         </div>
-        <div className=" flex flex-row gap-2">
-          <button className=" item-center flex cursor-pointer flex-row justify-center gap-2 rounded-full  border-none bg-[#ffc233] p-2 px-10 transition-all hover:shadow-md ">
-            <span className=" my-auto text-lg font-semibold text-[#023047e3]">
+        <div className=" flex flex-row items-center gap-2">
+          <button className=" item-center flex h-8 cursor-pointer flex-row justify-center gap-2 rounded-full border-none  bg-[#ffc233] px-5 transition-all hover:shadow-md sm:h-auto sm:p-2 sm:px-10 ">
+            <span className=" my-auto text-sm font-semibold text-[#023047e3] sm:text-lg">
               Orders
             </span>
             <img
               src={"/cart.svg"}
               alt="profile"
-              className=" my-auto h-5 cursor-pointer transition-all "
+              className=" my-auto h-4 cursor-pointer transition-all sm:h-5 "
             />
           </button>
           <Dropdown menu={{ items }} placement="bottomRight">
-            <button className=" h-12 overflow-hidden rounded-full border  border-orange-400 bg-transparent p-0 transition-all hover:drop-shadow-md">
+            <button className=" h-10 overflow-hidden rounded-full border border-orange-400  bg-transparent p-0 transition-all hover:drop-shadow-md sm:h-12">
               <img
                 src={user ? user.imageUrl : "/profile.png"}
                 alt="profile"
-                className=" h-12 cursor-pointer"
+                className=" h-full cursor-pointer"
               />
             </button>
           </Dropdown>

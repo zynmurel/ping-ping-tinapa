@@ -16,6 +16,7 @@ export default {
       },
       height: {
         "45rem": "38rem",
+        "28rem": "28rem",
       },
     },
   },

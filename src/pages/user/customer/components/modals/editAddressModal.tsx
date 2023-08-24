@@ -86,9 +86,9 @@ const EditAddressModal: React.FC = () => {
         onClick={showModal}
         className="item-center mb-2 flex w-full justify-center rounded-md border border-yellow-300 bg-[#fff6dd] p-0 text-left text-lg text-[#023047]"
       >
-        <span className=" relative flex">
-          <BiCurrentLocation className="absolute -left-6 top-1/2 my-auto  -translate-y-1/2 text-xl text-[#023047]" />
-          Update Address Details
+        <span className=" relative my-auto flex items-center justify-center text-sm sm:text-lg">
+          <BiCurrentLocation className="absolute -left-6 top-1/2 my-auto  -translate-y-1/2 text-sm text-[#023047] sm:text-xl" />
+          <span className=" my-auto">Update Address Details</span>
         </span>
       </Button>
       <Modal open={isModalOpen} onCancel={handleCancel} footer={[]}>
@@ -109,7 +109,22 @@ const EditAddressModal: React.FC = () => {
           <div className=" flex  flex-row items-center justify-between gap-2  sm:gap-2">
             <div className=" m-0 w-2/3 flex-1">
               <span className="  text-[#023047]">Contact Number</span>
-              <Form.Item name="phone" rules={rules}>
+              <Form.Item
+                name="phone"
+                rules={[
+                  { required: true },
+                  {
+                    validator: async (_, value) => {
+                      const regex = /^(09|\+639)\d{9}$/;
+                      if (!regex.test(value)) {
+                        return Promise.reject(
+                          new Error("Phone number is must be digits")
+                        );
+                      }
+                    },
+                  },
+                ]}
+              >
                 <Input placeholder="e.g. 09*********" className=" w-1/2" />
               </Form.Item>
             </div>

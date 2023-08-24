@@ -11,6 +11,7 @@ import { type } from "os";
 const CustomerRegisterForm: React.FC = () => {
   const [disableState, setDisableState] = useState([false, false, false]);
   const { user, isLoaded } = useUser();
+  const [number, setNumber] = useState("09");
   const { mutate } = api.mutations.addCustomer.useMutation({
     onSuccess: () => {
       deleteCookie("user");
@@ -95,8 +96,28 @@ const CustomerRegisterForm: React.FC = () => {
         <div className="mt-0 flex flex-1 flex-row gap-2 sm:mt-0">
           <div className=" m-0 w-full flex-1">
             <span className="  text-[#023047]">Phone Number</span>
-            <Form.Item name="phone" rules={rules}>
-              <InputNumber className=" w-full" placeholder="e.g. 09********" />
+            <Form.Item
+              name="phone"
+              rules={[
+                { required: true },
+                {
+                  validator: async (_, value) => {
+                    const regex = /^(09|\+639)\d{9}$/;
+                    if (!regex.test(value)) {
+                      return Promise.reject(
+                        new Error("Phone number is must be digits")
+                      );
+                    }
+                  },
+                },
+              ]}
+            >
+              <Input
+                value={number}
+                onChange={(e) => setNumber(number + e)}
+                className=" w-full"
+                placeholder="e.g. 09********"
+              />
             </Form.Item>
           </div>
           <div className=" m-0 w-full flex-1">
@@ -169,6 +190,7 @@ const CustomerRegisterForm: React.FC = () => {
           htmlType="submit"
           type="primary"
           className=" w-60 border-none hover:drop-shadow-lg"
+          disabled={!isLoaded}
         >
           Submit
         </Button>

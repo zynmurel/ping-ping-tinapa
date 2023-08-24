@@ -75,8 +75,8 @@ export const mutationRouter = createTRPCRouter({
             id: getMyOrders?.id,
           },
           data: {
-            quantity: { increment: input.quantity },
-            totalPrice: { increment: input.totalPrice },
+            quantity: input.quantity,
+            totalPrice: input.totalPrice,
           },
         });
       }
@@ -120,6 +120,13 @@ export const mutationRouter = createTRPCRouter({
       });
       return updateUser;
     }),
+  findTransaction: publicProcedure.query(({ ctx }) => {
+    ctx.prisma.transaction.findFirst({
+      where: {
+        status: "NULL",
+      },
+    });
+  }),
   findOrAddTransaction: publicProcedure
     .input(
       z.object({
@@ -130,14 +137,14 @@ export const mutationRouter = createTRPCRouter({
       let transaction = await ctx.prisma.transaction.findFirst({
         where: {
           userId: input.userId,
-          status: "PENDING",
+          status: "NULL",
         },
       });
       if (!transaction) {
         transaction = await ctx.prisma.transaction.create({
           data: {
             ...input,
-            status: "PENDING",
+            status: "NULL",
             type: "DELIVER",
           },
         });
@@ -161,5 +168,41 @@ export const mutationRouter = createTRPCRouter({
         } as any,
       });
       return changeType;
+    }),
+  getOrderProcessed: publicProcedure
+    .input(
+      z.object({
+        transactionId: z.string(),
+        orders: z
+          .object({
+            productId: z.string(),
+            quantity: z.number(),
+          })
+          .array(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const processOrder = await ctx.prisma.transaction
+        .update({
+          where: {
+            id: input.transactionId,
+          },
+          data: {
+            status: "PENDING",
+          },
+        })
+        .then(async () => {
+          return input.orders.map(async (order) => {
+            return await ctx.prisma.product.update({
+              where: {
+                id: order.productId,
+              },
+              data: {
+                stock: { decrement: order.quantity },
+              },
+            });
+          });
+        });
+      return processOrder;
     }),
 });

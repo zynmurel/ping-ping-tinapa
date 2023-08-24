@@ -90,6 +90,7 @@ enum ProductCategory {
 }
 
 enum TransactionStatus {
+  NULL
   PENDING
   ONGOING
   DELIVERING

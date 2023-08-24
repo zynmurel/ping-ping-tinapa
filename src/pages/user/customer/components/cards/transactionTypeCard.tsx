@@ -31,25 +31,25 @@ const TransactionType = () => {
     {
       value: "DELIVER",
       label: (
-        <div className=" flex items-center justify-center">
-          <BiSolidCar className=" absolute left-1 my-auto text-xl" />
-          <span className=" text-lg">Delivery</span>
+        <div className=" flex h-full items-center justify-center">
+          <BiSolidCar className=" absolute left-1 my-auto text-sm sm:text-xl" />
+          <span className=" text-sm sm:text-lg">Delivery</span>
         </div>
       ),
     },
     {
       value: "PICKUP",
       label: (
-        <div className=" flex items-center justify-center">
-          <BiLogoDropbox className=" absolute left-1 my-auto text-xl" />
-          <span className=" text-lg">Pick-up</span>
+        <div className=" flex h-full items-center justify-center">
+          <BiLogoDropbox className=" absolute left-1 my-auto text-sm sm:text-xl" />
+          <span className="  text-sm sm:text-lg">Pick-up</span>
         </div>
       ),
     },
   ];
   return (
-    <div className=" flex flex-col  rounded-xl ">
-      <div className="flex flex-col items-center justify-between rounded-3xl bg-[#fff5e7] bg-[#ffffffd3] p-2 px-6 drop-shadow-lg">
+    <div className=" flex flex-col rounded sm:rounded-xl ">
+      <div className="flex flex-col items-center justify-between rounded bg-[#fff5e7] bg-[#ffffffd3] px-6 drop-shadow-lg sm:rounded-3xl sm:p-2">
         {transactionType || isLoading ? (
           <Form form={form} className=" mt-2 w-full flex-1">
             <Form.Item className=" mb-2">

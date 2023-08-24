@@ -1,5 +1,6 @@
 import { InputNumber, Modal, Tag } from "antd";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { MyOrderContext } from "~/pages/user/context/contextProvider";
 
 const AddOrderModal = ({
   isOpen,
@@ -9,6 +10,8 @@ const AddOrderModal = ({
   setQuantity,
   openConfirm,
   setOpenConfirm,
+  myOrders,
+  myAddedOrder,
 }: any) => {
   const handleCancel = () => {
     setQuantity(1);
@@ -17,33 +20,32 @@ const AddOrderModal = ({
   useEffect(() => {
     setIsOpen(false);
   }, [openConfirm]);
+  useEffect(() => {
+    myAddedOrder.id && setQuantity(myAddedOrder.quantity);
+    console.log(myAddedOrder);
+  }, [myAddedOrder]);
   const buttonDisable = !quantity || !product.stock;
   return (
-    <Modal
-      open={isOpen}
-      onCancel={handleCancel}
-      footer={[]}
-      style={{ minWidth: 450 }}
-    >
-      <div className=" flex flex-col items-center">
+    <Modal open={isOpen} onCancel={handleCancel} footer={[]}>
+      <div className=" flex w-full flex-col items-center">
         <div className="relative flex w-full justify-center overflow-hidden rounded-lg bg-[#ff990051]">
           <img
             src={product.image}
             alt={product.name}
             className=" absolute mx-auto w-full  opacity-20"
           />
-          <div className=" z-10 m-2 h-64 w-3/5  overflow-hidden rounded-lg">
+          <div className=" z-10 h-36 w-3/5 overflow-hidden rounded-lg  sm:m-2 sm:h-64">
             <img src={product.image} alt={product.name} className="w-full" />
           </div>
         </div>
-        <div className=" flex w-11/12 flex-col p-5 pb-0">
-          <span className=" font-rubik text-2xl font-semibold text-[#023047]">
+        <div className=" flex w-11/12 flex-col p-2 pb-0 sm:p-5">
+          <span className="font-rubik text-lg font-semibold leading-5 text-[#023047] sm:text-2xl sm:leading-9">
             {product.name}
           </span>
-          <span className=" font-base font-rubik text-lg">
+          <span className=" font-base font-rubik text-sm sm:text-lg">
             {product.description}
           </span>
-          <span className=" font-base pb-2 font-rubik text-base">
+          <span className=" font-base pb-2 font-rubik text-sm sm:text-base">
             Price : ₱ {product.price?.toFixed(2)}
           </span>
           <div>
@@ -61,7 +63,7 @@ const AddOrderModal = ({
               <>
                 <Tag color="green">{`Stock : ${product.stock}`}</Tag>
                 <div className=" mx-auto  mt-4 flex flex-row justify-between">
-                  <span className=" text-lg font-medium">
+                  <span className=" text-base font-medium sm:text-lg">
                     Quantity :{" "}
                     <InputNumber
                       value={quantity}
@@ -74,23 +76,32 @@ const AddOrderModal = ({
                     />
                   </span>
 
-                  <span className=" text-lg font-medium">
-                    Total Price : ₱ {(product.price * quantity).toFixed(2)}
+                  <span className="text-right text-base font-medium sm:text-start sm:text-lg">
+                    Total Price : ₱{(product.price * quantity).toFixed(2)}
                   </span>
                 </div>
               </>
             )}
+            {myAddedOrder.id && (
+              <div className="-mb-2 mt-2 text-center text-xs text-orange-300">
+                Product is in your order list
+              </div>
+            )}
             <div className=" flex w-full items-center justify-center">
               <button
                 disabled={buttonDisable}
-                onClick={() => setOpenConfirm(true)}
-                className={`mt-4 flex w-2/3 cursor-pointer  items-center justify-center rounded-full border-none  p-3 text-xl font-bold  transition-all ${
+                onClick={() => {
+                  quantity === myAddedOrder.quantity
+                    ? setIsOpen(false)
+                    : setOpenConfirm(true);
+                }}
+                className={`mt-4 flex w-2/3 cursor-pointer  items-center justify-center rounded-full border-none  p-3 text-base font-bold transition-all  sm:text-xl ${
                   buttonDisable
                     ? ""
                     : " bg-[#ffc233] text-[#1b4b62] hover:bg-[#ffaa33] hover:drop-shadow-md"
                 }`}
               >
-                Add Order
+                {myAddedOrder.id ? "Update Order" : "Add Order"}
                 <img src="/cart.svg" className="w-5 pl-2 sm:w-8" />
               </button>
             </div>
