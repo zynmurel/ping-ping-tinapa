@@ -17,8 +17,38 @@ export const queryRouter = createTRPCRouter({
       });
       return user;
     }),
+  getAllTransaction: publicProcedure.query(async ({ ctx, input }) => {
+    const user = ctx.prisma.transaction.findMany({
+      include: {
+        Order: true,
+        user: true,
+      },
+      orderBy: {
+        updatedAt: "asc",
+      },
+    });
+    return user;
+  }),
   getProducts: publicProcedure.query(async ({ ctx }) => {
-    const user = ctx.prisma.product.findMany();
+    const user = ctx.prisma.product.findMany({
+      where: {
+        hidden: false,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return user;
+  }),
+  getHiddenProducts: publicProcedure.query(async ({ ctx }) => {
+    const user = ctx.prisma.product.findMany({
+      where: {
+        hidden: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
     return user;
   }),
   queryAnArray: publicProcedure

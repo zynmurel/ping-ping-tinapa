@@ -37,14 +37,16 @@ model User {
 }
 
 model Transaction {
-  id        String             @id @default(cuid())
-  user      User               @relation(fields: [userId], references: [id])
-  userId    String
-  status    TransactionStatus?
-  type      TransactionType?
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
-  Order     Order[]
+  id          String             @id @default(cuid())
+  user        User               @relation(fields: [userId], references: [id])
+  userId      String
+  status      TransactionStatus?
+  type        TransactionType?
+  deliveryFee Float?
+  totalPrice  Float?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  Order       Order[]
 }
 
 model Order {
@@ -69,6 +71,7 @@ model Product {
   stock       Int?
   category    ProductCategory?
   image       String?
+  hidden      Boolean?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   Order       Order[]
@@ -93,6 +96,6 @@ enum TransactionStatus {
   NULL
   PENDING
   ONGOING
-  DELIVERING
-  PICKUP
+  DONE
+  CANCELLED
 }

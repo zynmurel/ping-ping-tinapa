@@ -1,24 +1,16 @@
-import { SignOutButton, UserButton } from "@clerk/nextjs";
-import { api } from "~/utils/api";
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/router";
-import { deleteCookie } from "cookies-next";
+import AdminLayout from "./layout";
+import ProviderLayout from "../context/ProviderLayout";
+import OrderTable from "./components/orderTable";
 
 const AdminPage = () => {
-  const router = useRouter();
   return (
-    <>
-      <SignOutButton>
-        <button
-          onClick={() => {
-            deleteCookie("user");
-            router.push("/");
-          }}
-        >
-          sign out
-        </button>
-      </SignOutButton>
-    </>
+    <ProviderLayout>
+      <AdminLayout>
+        <div className=" h-full bg-gradient-to-l from-[#fff4da] to-[#ecbf76] p-2">
+          <OrderTable />
+        </div>
+      </AdminLayout>
+    </ProviderLayout>
   );
 };
 

@@ -1,6 +1,13 @@
+import { type TransactionStatus } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { api } from "~/utils/api";
+const options: TransactionStatus[] = [
+  "CANCELLED",
+  "DONE",
+  "NULL",
+  "ONGOING",
+  "PENDING",
+];
 
 export const mutationRouter = createTRPCRouter({
   addProduct: publicProcedure
@@ -204,5 +211,86 @@ export const mutationRouter = createTRPCRouter({
           });
         });
       return processOrder;
+    }),
+  changeTransactionStatus: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        status: z.any(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const changeStatus = ctx.prisma.transaction.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          status: input.status,
+        },
+      });
+
+      return changeStatus;
+    }),
+  editProduct: publicProcedure
+    .input(
+      z.object({
+        productId: z.string(),
+        productName: z.string(),
+        productDescription: z.string(),
+        price: z.number(),
+        category: z.any(),
+        image: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const editProduct = ctx.prisma.product.update({
+        where: {
+          id: input.productId,
+        },
+        data: {
+          name: input.productName,
+          description: input.productDescription,
+          price: input.price,
+          category: input.category,
+          image: input.image,
+        },
+      });
+      return editProduct;
+    }),
+  hideOrUnhideProduct: publicProcedure
+    .input(
+      z.object({
+        productId: z.string(),
+        hidden: z.boolean(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const editProduct = ctx.prisma.product.update({
+        where: {
+          id: input.productId,
+        },
+        data: {
+          hidden: input.hidden,
+        },
+      });
+      return editProduct;
+    }),
+  addOrSubtractStocks: publicProcedure
+    .input(
+      z.object({
+        productId: z.string(),
+        stocks: z.number(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const editProduct = ctx.prisma.product.update({
+        where: {
+          id: input.productId,
+        },
+        data: {
+          stock: input.stocks,
+        },
+      });
+      return editProduct;
     }),
 });

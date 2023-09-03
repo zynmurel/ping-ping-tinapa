@@ -22,6 +22,7 @@
     "@uploadthing/react": "^5.2.1",
     "antd": "^5.8.2",
     "cookies-next": "^2.1.2",
+    "dayjs": "^1.11.9",
     "next": "^13.4.2",
     "philippines": "^1.0.0",
     "psgc": "^2.1.1",

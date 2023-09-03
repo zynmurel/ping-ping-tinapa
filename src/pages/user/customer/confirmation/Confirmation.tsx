@@ -92,7 +92,7 @@ const Confirmation = () => {
               </Divider>
             </div>
             <div className=" flex w-full flex-1 flex-col gap-1">
-              <div className=" flex h-48 flex-col overflow-scroll rounded-lg bg-[#ffffff] p-3 sm:mb-10 sm:h-96">
+              <div className=" flex h-36 flex-col overflow-scroll rounded-lg bg-[#ffffff] p-3 sm:mb-10 sm:h-96">
                 {tinapas?.length !== 0 && (
                   <span className="  text-sm font-bold text-slate-800 sm:text-lg">
                     * TINAPA
@@ -157,7 +157,7 @@ const Confirmation = () => {
                     ₱ {100}
                   </span>
                 </span>
-                <span className="flex w-full justify-between text-lg font-bold text-slate-800 sm:text-xl">
+                <span className="flex w-full justify-between pb-3 text-lg font-bold text-slate-800 sm:pb-0 sm:text-xl">
                   Total Price -{" "}
                   <span className=" text-lg font-normal text-slate-700">
                     ₱ {(sumPrice(myOrders) + 100).toFixed(2)}
