@@ -10,6 +10,7 @@ import { api } from "~/utils/api";
 
 const OrderCard = () => {
   const router = useRouter();
+  const { data: settings } = api.queries.getSettings.useQuery();
   const { openNotificationWithIcon } = useContext(NotificationContext);
   const { mutate } = api.mutations.deleteOrder.useMutation({
     onSuccess: () => {
@@ -66,7 +67,7 @@ const OrderCard = () => {
       </span>
     );
   };
-
+  const deliveryfee = transactionType === "DELIVER" ? settings?.deliveryFee : 0;
   return (
     <div className=" flex flex-1 flex-col  rounded sm:rounded-xl  ">
       <div className="flex flex-1 flex-col items-center justify-between rounded bg-[#ffffffd3] drop-shadow-lg sm:rounded-3xl">
@@ -96,12 +97,14 @@ const OrderCard = () => {
             </span>
             {transactionType === "DELIVER" && (
               <span className=" flex justify-between text-sm font-semibold sm:text-base">
-                Delivery Fee - <span>₱ {100}</span>
+                Delivery Fee - <span>₱ {deliveryfee}</span>
               </span>
             )}
             <span className="flex justify-between pt-2 text-lg font-semibold sm:text-xl">
               Total Price :
-              <span>₱ {(sumPrice(myOrders) + 100).toFixed(2)}</span>
+              <span>
+                ₱ {(sumPrice(myOrders) + (deliveryfee || 0)).toFixed(2)}
+              </span>
             </span>
           </div>
         </div>

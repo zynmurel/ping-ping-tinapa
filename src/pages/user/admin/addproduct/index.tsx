@@ -1,15 +1,26 @@
 import ProviderLayout from "../../context/ProviderLayout";
 import AdminLayout from "../layout";
 import { api } from "~/utils/api";
-import { useContext } from "react";
+import { FaRegImage } from "react-icons/fa";
+import { useContext, useEffect, useState } from "react";
 import { NotificationContext } from "../../context/contextProvider";
-import { Button, Form, Input, InputNumber, Select } from "antd";
+import { Button, Form, Image, Input, InputNumber, Select } from "antd";
 import { useRouter } from "next/router";
+import UploadButtonComponent from "~/pages/upload-button";
 
 const AdminProducts = () => {
+  const [imageUrl, setImageUrl] = useState("");
+  const [errorVis, setErrorVis] = useState("hidden");
   const router = useRouter();
   const { openNotificationWithIcon } = useContext(NotificationContext);
   const [form] = Form.useForm();
+  const { mutate } = api.mutations.addProduct.useMutation({
+    onSuccess: (data) => {
+      openNotificationWithIcon("success", "New Product Added", `sdsv`);
+      form.resetFields(), setImageUrl("");
+      router.push("/user/admin/products");
+    },
+  });
   const rules = {
     name: [
       {
@@ -56,18 +67,77 @@ const AdminProducts = () => {
       },
     ],
   };
+  const onFinishProduct = (e: any) => {
+    if (imageUrl.length === 0) {
+      setErrorVis("visible");
+    } else {
+      mutate({
+        image: imageUrl,
+        name: e.name,
+        description: e.description,
+        price: e.price,
+        category: e.category,
+        stock: e.stock,
+      });
+    }
+  };
+  useEffect(() => {
+    setErrorVis("hidden");
+  }, [imageUrl]);
   return (
     <ProviderLayout>
       <AdminLayout>
-        <div className=" h-full bg-gradient-to-l from-[#fff4da] to-[#ecbf76] p-2">
-          <div className="relative flex h-full flex-col items-center rounded-xl bg-[#0f1d36] p-1">
+        <div className=" h-full  bg-gradient-to-l from-[#fff4da] to-[#ecbf76] p-2">
+          <div className="relative flex h-full flex-col items-center rounded-xl bg-[#0f1d36] p-1 ">
             <div className=" flex h-20 w-full items-center justify-between  px-10">
               <span className=" mt-5 w-full text-center text-4xl font-semibold text-white">
                 Add Product
               </span>
             </div>
-            <div className=" mt-10 w-1/2 rounded bg-white p-10">
-              <Form form={form}>
+            <div className=" max-h-45rem w-1/2 overflow-scroll rounded  bg-white p-10">
+              <div className=" flex w-full flex-col items-start">
+                <span className=" text-lg font-bold ">Product Image</span>
+                <div className=" ">
+                  {imageUrl.length === 0 ? (
+                    <>
+                      <div className=" relative flex flex-row items-center gap-2 ">
+                        <img
+                          src="/emptyImage.png"
+                          alt="empty image"
+                          height={100}
+                          width={100}
+                        />
+                        <UploadButtonComponent
+                          imageUrl={imageUrl}
+                          setImageUrl={setImageUrl}
+                        />
+                        <div
+                          className={`${errorVis} absolute bottom-7 m-0 h-5 flex-none p-0 text-red-500`}
+                        >
+                          Choose an image for the product
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className=" flex flex-row items-center gap-4">
+                      <Image
+                        src={`${imageUrl}`}
+                        alt="product image"
+                        height={100}
+                        width={100}
+                      />
+                      <button
+                        onClick={() => setImageUrl("")}
+                        className=" cursor-pointer rounded-md border-red-500 bg-white text-red-500"
+                      >
+                        Remove Image
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <Form form={form} className=" mt-5" onFinish={onFinishProduct}>
                 <div className=" flex flex-col items-start">
                   <span className=" text-lg font-bold ">Product Name</span>
                   <Form.Item

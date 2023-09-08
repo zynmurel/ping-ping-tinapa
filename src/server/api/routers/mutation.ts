@@ -17,12 +17,15 @@ export const mutationRouter = createTRPCRouter({
         description: z.string(),
         price: z.number(),
         image: z.string(),
+        stock: z.number(),
+        category: z.any(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const newProduct = await ctx.prisma.product.create({
         data: {
           ...input,
+          hidden: false,
         },
       });
       return newProduct;
@@ -180,6 +183,8 @@ export const mutationRouter = createTRPCRouter({
     .input(
       z.object({
         transactionId: z.string(),
+        totalPrice: z.number(),
+
         orders: z
           .object({
             productId: z.string(),
@@ -189,6 +194,12 @@ export const mutationRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const transaction = await ctx.prisma.transaction.findFirst({
+        where: {
+          id: input.transactionId,
+        },
+      });
+      const delivery = await ctx.prisma.settings.findFirst();
       const processOrder = await ctx.prisma.transaction
         .update({
           where: {
@@ -196,6 +207,9 @@ export const mutationRouter = createTRPCRouter({
           },
           data: {
             status: "PENDING",
+            totalPrice: input.totalPrice,
+            deliveryFee:
+              transaction?.type === "DELIVER" ? delivery?.deliveryFee : 0,
           },
         })
         .then(async () => {
@@ -292,5 +306,51 @@ export const mutationRouter = createTRPCRouter({
         },
       });
       return editProduct;
+    }),
+  updateStoreInformation: publicProcedure
+    .input(
+      z.object({
+        phone: z.string(),
+        about: z.string(),
+        email: z.string(),
+        address: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const settingData = await ctx.prisma.settings.findFirst().then((data) => {
+        const setting = ctx.prisma.settings.update({
+          where: {
+            id: data?.id,
+          },
+          data: {
+            contact: input.phone,
+            address: input.address,
+            about: input.about,
+            email: input.email,
+          },
+        });
+        return setting;
+      });
+      return settingData;
+    }),
+  updateStoreDeliveryFee: publicProcedure
+    .input(
+      z.object({
+        fee: z.number(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const settingData = await ctx.prisma.settings.findFirst().then((data) => {
+        const setting = ctx.prisma.settings.update({
+          where: {
+            id: data?.id,
+          },
+          data: {
+            deliveryFee: input.fee,
+          },
+        });
+        return setting;
+      });
+      return settingData;
     }),
 });

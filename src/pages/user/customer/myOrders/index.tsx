@@ -4,9 +4,21 @@ import { useState } from "react";
 import { api } from "~/utils/api";
 import OrderModal from "./ordersModal";
 import { IoReload } from "react-icons/io5";
+import { MdArrowBack } from "react-icons/md";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/router";
 const { Search } = Input;
 
 const OrderTable = () => {
+  const router = useRouter();
+  const { user, isLoaded, isSignedIn } = useUser();
+  const {
+    data: userData,
+    isLoading: userIsLoading,
+    isError,
+  } = api.queries.getUser.useQuery({
+    id: user ? user.id : "",
+  });
   const [activeStatus, setactiveStatus] = useState<string>("PENDING");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [activeId, setActiveId] = useState<string>("");
@@ -14,7 +26,10 @@ const OrderTable = () => {
     useState<string>("DELIVERY & PICK-UP");
   const [searchText, setSearchText] = useState<string>("");
 
-  const { data, isLoading, refetch } = api.queries.getAllTransaction.useQuery();
+  const { data, isLoading, refetch } =
+    api.queries.getTransactionByUser.useQuery({
+      id: userData?.id || "",
+    });
   const { data: productData, isLoading: productIsLoading } =
     api.queries.getProducts.useQuery();
 
@@ -72,21 +87,6 @@ const OrderTable = () => {
       key: "date",
     },
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Phone Number",
-      dataIndex: "contact",
-      key: "contact",
-    },
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-    },
-    {
       title: "Order Type",
       dataIndex: "type",
       key: "type",
@@ -103,7 +103,7 @@ const OrderTable = () => {
               setModalOpen(true);
               setActiveId(data.key);
             }}
-            className={` cursor-pointer rounded-md p-2 text-center  transition-all duration-200 hover:scale-105 ${color}`}
+            className={` text:xs mx-auto w-10 cursor-pointer rounded-md p-2 text-center transition-all duration-200  hover:scale-105 sm:w-32 sm:text-base ${color}`}
           >
             {_}
           </div>
@@ -119,16 +119,13 @@ const OrderTable = () => {
       key: "PENDING",
       label: (
         <span
-          className={` font-base rounded-md  p-2 px-5 text-base  ${
+          className={` font-base rounded-md  p-1 px-2 text-xs sm:p-2 sm:px-5 sm:text-base  ${
             activeStatus === "PENDING"
               ? "bg-orange-200 text-orange-600"
               : "text-orange-400"
           }`}
         >
-          <div className=" absolute right-0 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-600 text-xs text-white">
-            {count("PENDING")}
-          </div>
-          Orders
+          Pending
         </span>
       ),
     },
@@ -136,15 +133,12 @@ const OrderTable = () => {
       key: "ONGOING",
       label: (
         <span
-          className={` font-base rounded-md  p-2 px-5 text-base ${
+          className={` font-base rounded-md p-1 px-2 text-xs sm:p-2 sm:px-5 sm:text-base ${
             activeStatus === "ONGOING"
               ? "bg-blue-200 text-blue-600"
               : "text-blue-400"
           }`}
         >
-          <div className=" absolute right-0 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs text-white">
-            {count("ONGOING")}
-          </div>
           Ongoing
         </span>
       ),
@@ -153,7 +147,7 @@ const OrderTable = () => {
       key: "DONE",
       label: (
         <span
-          className={` font-base rounded-md  p-2 px-5 text-base ${
+          className={` font-base rounded-md  p-1 px-2 text-xs sm:p-2 sm:px-5 sm:text-base ${
             activeStatus === "DONE"
               ? "bg-green-200 text-green-600"
               : "text-green-400"
@@ -167,7 +161,7 @@ const OrderTable = () => {
       key: "CANCELLED",
       label: (
         <span
-          className={` font-base rounded-md  p-2 px-5 text-base ${
+          className={` font-base rounded-md  p-1 px-2 text-xs sm:p-2 sm:px-5 sm:text-base ${
             activeStatus === "CANCELLED"
               ? "bg-red-200 text-red-600"
               : "text-red-400"
@@ -179,14 +173,15 @@ const OrderTable = () => {
     },
   ];
 
-  const onSearch = (value: any) => {
-    setSearchText(value.target.value);
-  };
   return (
-    <div className="relative h-full rounded-xl bg-[#0f1d36] p-1">
-      <div className=" flex w-full items-center justify-between px-8">
-        <div className=" flex h-20 items-center justify-center text-4xl font-bold text-white">
-          Order List
+    <div className="relative min-h-screen rounded-xl bg-[#ffff] sm:px-40 sm:py-10">
+      <div className=" flex w-full items-center justify-between px-2 ">
+        <div className=" flex h-14 items-center justify-center gap-2 text-xl font-bold sm:h-20 sm:text-4xl">
+          <MdArrowBack
+            onClick={() => router.push("/user/customer")}
+            className=" cursor-pointer text-2xl text-slate-600 hover:scale-105 hover:text-black sm:text-4xl"
+          />{" "}
+          My Orders{" "}
         </div>
         <div className=" flex items-center gap-1">
           <OrderModal
@@ -198,61 +193,24 @@ const OrderTable = () => {
             setActiveId={setActiveId}
             activeStatus={activeStatus}
           />
-          <Search
-            size="large"
-            placeholder="Search Customer"
-            onChange={onSearch}
-            defaultValue={searchText}
-            style={{ width: 400 }}
-          />
-          <Select
-            showSearch
-            placeholder="Order Type"
-            size="large"
-            defaultValue={activeOrderType}
-            style={{ width: 200 }}
-            options={[
-              {
-                key: "delpick",
-                label: "DELIVERY & PICK-UP",
-                value: "DELIVERY & PICK-UP",
-              },
-              { key: "pick", label: "PICK-UP", value: "PICKUP" },
-              { key: "deliver", label: "DELIVER", value: "DELIVER" },
-            ]}
-            onChange={(data) => setActiveOrderType(data)}
-          />
         </div>
       </div>
       <Card
-        style={{ width: "100%", height: "90%" }}
+        size="small"
+        style={{ width: "100%", height: "100%" }}
         tabList={tabListNoTitle}
         activeTabKey={activeStatus}
         onTabChange={onTab2Change}
-        bodyStyle={{ maxHeight: 500, position: "relative" }}
-        headStyle={{ marginLeft: 40 }}
+        bodyStyle={{ position: "relative" }}
       >
-        <div
-          onClick={() => refetch()}
-          className=" absolute -top-11 left-4 flex cursor-pointer items-center rounded-md bg-[#516b9a] p-1 transition-all hover:brightness-90 "
-        >
-          <IoReload
-            fontSize={20}
-            className=" text-white transition-all hover:rotate-45"
-          />
-        </div>
         {!isLoading && data && (
           <Table
+            size="small"
             dataSource={[...dataS]}
             scroll={{ y: 500 }}
             columns={columns}
             className="  rounded-xl bg-white p-1"
           />
-        )}
-        {isLoading && (
-          <div className=" flex h-full w-full items-center justify-center">
-            <Spin size="large" />
-          </div>
         )}
       </Card>
       ;

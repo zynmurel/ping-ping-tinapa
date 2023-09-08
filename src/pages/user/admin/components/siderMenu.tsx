@@ -32,12 +32,12 @@ const SiderMenu: React.FC = () => {
       label: "Products",
     },
     {
-      key: "/user/reports",
+      key: "/user/admin/reports",
       icon: <TbReport size={20} />,
       label: "Reports",
     },
     {
-      key: "/user/settings",
+      key: "/user/admin/settings",
       icon: <LuSettings size={20} />,
       label: "Settings",
     },

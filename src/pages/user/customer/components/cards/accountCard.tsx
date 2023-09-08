@@ -46,7 +46,10 @@ const Account = () => {
           </span>
         </div>
         <div className=" flex flex-row items-center gap-2">
-          <button className=" item-center flex h-8 cursor-pointer flex-row justify-center gap-2 rounded-full border-none  bg-[#ffc233] px-5 transition-all hover:shadow-md sm:h-auto sm:p-2 sm:px-10 ">
+          <button
+            onClick={() => router.push("/user/customer/myOrders")}
+            className=" item-center flex h-8 cursor-pointer flex-row justify-center gap-2 rounded-full border-none  bg-[#ffc233] px-5 transition-all hover:shadow-md sm:h-auto sm:p-2 sm:px-10 "
+          >
             <span className=" my-auto text-sm font-semibold text-[#023047e3] sm:text-lg">
               Orders
             </span>

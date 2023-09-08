@@ -13,6 +13,7 @@ import { api } from "~/utils/api";
 
 const Confirmation = () => {
   const router = useRouter();
+  const { data: settings } = api.queries.getSettings.useQuery();
   const { transactionData } = useContext(TransactionContext);
   const { openNotificationWithIcon } = useContext(NotificationContext);
   const { userData, isLoaded } = useContext(UserContext);
@@ -25,9 +26,7 @@ const Confirmation = () => {
   const pasalubong = myOrders?.filter(
     (t: any) => t.product.category === "PASALUBONG"
   );
-  useEffect(() => {
-    console.log(myOrders, "inapa");
-  }, [myOrders]);
+  useEffect(() => {}, [myOrders]);
 
   function sumPrice(array: any) {
     let sum = 0;
@@ -50,7 +49,6 @@ const Confirmation = () => {
       </span>
     );
   };
-  console.log(myOrders);
   const { mutate, isLoading } = api.mutations.getOrderProcessed.useMutation({
     onSuccess: () => {
       openNotificationWithIcon(
@@ -69,6 +67,7 @@ const Confirmation = () => {
       mutate({
         transactionId: transactionData.id,
         orders: productsToMutate,
+        totalPrice: sumPrice(myOrders),
       });
     }
   };
@@ -145,22 +144,30 @@ const Confirmation = () => {
                   TO PAY
                 </span>
                 <Divider className=" m-2" />
-                <span className="flex w-full justify-between text-xs font-medium text-slate-800 sm:text-lg ">
-                  Sub-Total -{" "}
-                  <span className=" text-xs font-normal text-slate-700 sm:text-lg">
-                    ₱ {sumPrice(myOrders).toFixed(2)}
-                  </span>
-                </span>
-                <span className="flex w-full justify-between text-xs font-medium text-slate-800 sm:text-lg">
-                  Delivery fee -{" "}
-                  <span className=" text-xs font-normal text-slate-700 sm:text-lg">
-                    ₱ {100}
-                  </span>
-                </span>
+                {transactionData?.type === "DELIVER" && (
+                  <>
+                    <span className="flex w-full justify-between text-xs font-medium text-slate-800 sm:text-lg ">
+                      Sub-Total -{" "}
+                      <span className=" text-xs font-normal text-slate-700 sm:text-lg">
+                        ₱ {sumPrice(myOrders).toFixed(2)}
+                      </span>
+                    </span>
+
+                    <span className="flex w-full justify-between text-xs font-medium text-slate-800 sm:text-lg">
+                      Delivery fee -{" "}
+                      <span className=" text-xs font-normal text-slate-700 sm:text-lg">
+                        ₱ {settings?.deliveryFee}
+                      </span>
+                    </span>
+                  </>
+                )}
                 <span className="flex w-full justify-between pb-3 text-lg font-bold text-slate-800 sm:pb-0 sm:text-xl">
                   Total Price -{" "}
                   <span className=" text-lg font-normal text-slate-700">
-                    ₱ {(sumPrice(myOrders) + 100).toFixed(2)}
+                    ₱{" "}
+                    {(
+                      sumPrice(myOrders) + (settings?.deliveryFee || 0)
+                    ).toFixed(2)}
                   </span>
                 </span>
               </div>

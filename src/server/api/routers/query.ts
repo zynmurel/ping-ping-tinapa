@@ -29,6 +29,35 @@ export const queryRouter = createTRPCRouter({
     });
     return user;
   }),
+  getTransactionByUser: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const user = ctx.prisma.transaction.findMany({
+        where: {
+          userId: input.id,
+        },
+        include: {
+          Order: true,
+          user: true,
+        },
+        orderBy: {
+          updatedAt: "asc",
+        },
+      });
+      return user;
+    }),
+  getAllDoneTransaction: publicProcedure.query(async ({ ctx, input }) => {
+    const user = ctx.prisma.transaction.findMany({
+      where: {
+        status: "DONE",
+      },
+    });
+    return user;
+  }),
   getProducts: publicProcedure.query(async ({ ctx }) => {
     const user = ctx.prisma.product.findMany({
       where: {
@@ -36,6 +65,17 @@ export const queryRouter = createTRPCRouter({
       },
       orderBy: {
         createdAt: "desc",
+      },
+    });
+    return user;
+  }),
+  getProductsForChart: publicProcedure.query(async ({ ctx }) => {
+    const user = ctx.prisma.product.findMany({
+      where: {
+        hidden: false,
+      },
+      include: {
+        Order: true,
       },
     });
     return user;
@@ -82,4 +122,8 @@ export const queryRouter = createTRPCRouter({
       });
       return getMyOrders;
     }),
+  getSettings: publicProcedure.query(({ ctx }) => {
+    const settings = ctx.prisma.settings.findFirst();
+    return settings;
+  }),
 });

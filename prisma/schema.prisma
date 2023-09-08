@@ -77,6 +77,15 @@ model Product {
   Order       Order[]
 }
 
+model Settings {
+  id          String @id @default(cuid())
+  deliveryFee Int
+  contact     String
+  email       String
+  address     String
+  about       String
+}
+
 enum Role {
   ADMIN
   CUSTOMER

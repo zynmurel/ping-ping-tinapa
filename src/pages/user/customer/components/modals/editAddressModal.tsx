@@ -91,7 +91,12 @@ const EditAddressModal: React.FC = () => {
           <span className=" my-auto">Update Address Details</span>
         </span>
       </Button>
-      <Modal open={isModalOpen} onCancel={handleCancel} footer={[]}>
+      <Modal
+        open={isModalOpen}
+        onCancel={handleCancel}
+        footer={[]}
+        className=" -mt-20 sm:mt-0"
+      >
         <Form
           form={form}
           initialValues={{ size: "large" }}

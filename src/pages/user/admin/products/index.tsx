@@ -6,6 +6,8 @@ import ProductEditModal from "../components/productEditModal";
 import { useContext, useState } from "react";
 import { NotificationContext } from "../../context/contextProvider";
 import { useRouter } from "next/router";
+import { PiBowlFoodFill } from "react-icons/pi";
+import { BiSolidHide } from "react-icons/bi";
 
 const AdminProducts = () => {
   const { openNotificationWithIcon } = useContext(NotificationContext);
@@ -159,12 +161,13 @@ const AdminProducts = () => {
       key: "PRODUCTS",
       label: (
         <span
-          className={` font-base rounded-md  p-2 px-5 text-xl  ${
+          className={` font-base flex items-center gap-1 rounded-md p-2 px-5 text-base  ${
             activeStatus === "PRODUCTS"
-              ? "bg-slate-200 text-slate-600"
+              ? "bg-slate-200 text-blue-900"
               : "text-slate-400"
           }`}
         >
+          <PiBowlFoodFill />
           Products
         </span>
       ),
@@ -173,12 +176,13 @@ const AdminProducts = () => {
       key: "HIDDEN",
       label: (
         <span
-          className={` font-base rounded-md  p-2 px-5 text-xl  ${
+          className={` font-base flex items-center gap-1 rounded-md p-2 px-5 text-base  ${
             activeStatus === "HIDDEN"
-              ? "bg-slate-200 text-slate-600"
+              ? "bg-slate-200 text-blue-900"
               : "text-slate-400"
           }`}
         >
+          <BiSolidHide />
           Hidden Products
         </span>
       ),
@@ -202,7 +206,7 @@ const AdminProducts = () => {
           <div className="relative h-full rounded-xl bg-[#0f1d36] p-1">
             <div className=" flex h-20 w-full items-center justify-between  px-10">
               <span className=" text-4xl font-semibold text-white">
-                Product List
+                Products
               </span>
               <button
                 onClick={() => router.push("/user/admin/addproduct")}

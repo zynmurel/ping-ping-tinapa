@@ -52,7 +52,9 @@ const AdminLayout = ({ children }: any) => {
         <button
           onClick={logOutFunction()}
           className=" w-48 cursor-pointer rounded-full border border-red-600 bg-red-200 p-2 text-red-500 hover:bg-red-300"
-        ></button>
+        >
+          Sign Out
+        </button>
       ),
     },
   ];

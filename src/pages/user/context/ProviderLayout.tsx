@@ -6,10 +6,13 @@ import {
   StateContext,
   TransactionContext,
   UserContext,
+  SettingContext,
 } from "./contextProvider";
 import { useEffect } from "react";
 
 const ProviderLayout = ({ children }: { children: any }) => {
+  const { data: settings, isLoading: settingIsLoading } =
+    api.queries.getSettings.useQuery();
   const { user, isLoaded, isSignedIn } = useUser();
   const { mutate, data: transactionData } =
     api.mutations.findOrAddTransaction.useMutation();
@@ -49,7 +52,9 @@ const ProviderLayout = ({ children }: { children: any }) => {
           <ProductsContext.Provider
             value={{ products, productsLoading, productsError }}
           >
-            {children}
+            <SettingContext.Provider value={{ settings, settingIsLoading }}>
+              {children}
+            </SettingContext.Provider>
           </ProductsContext.Provider>
         </MyOrderContext.Provider>
       </UserContext.Provider>

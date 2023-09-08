@@ -1,7 +1,7 @@
 import { Modal, Popconfirm, Tag } from "antd";
-import { useContext } from "react";
 import { api } from "~/utils/api";
 import { NotificationContext } from "../../context/contextProvider";
+import { useContext } from "react";
 
 const OrderModal = ({
   setModalOpen,
@@ -14,12 +14,13 @@ const OrderModal = ({
 }: any) => {
   const { openNotificationWithIcon } = useContext(NotificationContext);
   const { mutate } = api.mutations.changeTransactionStatus.useMutation({
-    onSuccess: (data) => {
-      refetch();
+    onSuccess: () => {
       openNotificationWithIcon(
-        "info",
-        `Order transfered to ${data.status?.toLowerCase()} tab`
+        "warning",
+        "Order Cancelled",
+        "Check cancelled order on the cancelled tab"
       );
+      refetch();
       setModalOpen(false);
     },
   });
@@ -50,12 +51,6 @@ const OrderModal = ({
     });
   };
 
-  const handleChangeStatus = (status: string) => {
-    mutate({
-      id: orderPerId[0].id,
-      status: status,
-    });
-  };
   let color: string = "";
   switch (orderPerId?.[0]?.status) {
     case "PENDING":
@@ -73,12 +68,7 @@ const OrderModal = ({
   }
   const deliveryFee = data?.type === "DELIVER" ? data?.deliveryFee : 0;
   return (
-    <Modal
-      open={modalOpen}
-      onCancel={handleCancel}
-      footer={[]}
-      className=" mt-28"
-    >
+    <Modal open={modalOpen} onCancel={handleCancel} footer={[]}>
       <div className=" flex w-full flex-col">
         <span className="flex items-center justify-between text-3xl font-semibold">
           Order/s
@@ -157,7 +147,7 @@ const OrderModal = ({
         </div>
       </div>
       <div className=" mx-auto flex h-10 flex-row gap-2 pt-3">
-        {(activeStatus === "PENDING" || activeStatus === "ONGOING") && (
+        {activeStatus === "PENDING" && (
           <Popconfirm
             title="Cancel Order"
             description="Are you sure to cancel this order?"
@@ -165,34 +155,10 @@ const OrderModal = ({
             okText="Yes"
             cancelText="No"
           >
-            <button className=" w-1/3  cursor-pointer rounded border-none bg-red-500 text-lg text-white transition-all hover:shadow-md hover:brightness-110">
+            <button className=" mx-auto w-1/2 cursor-pointer rounded border-none bg-red-500 text-lg text-white transition-all hover:shadow-md hover:brightness-110">
               Cancel Order
             </button>
           </Popconfirm>
-        )}
-        {activeStatus === "PENDING" && (
-          <button
-            onClick={() => handleChangeStatus("ONGOING")}
-            className=" flex-1 cursor-pointer rounded border-none bg-blue-500 text-lg text-white transition-all hover:shadow-md hover:brightness-110"
-          >
-            Process Order
-          </button>
-        )}
-        {activeStatus === "ONGOING" && (
-          <button
-            onClick={() => handleChangeStatus("DONE")}
-            className=" flex-1 cursor-pointer rounded border-none bg-green-500 text-lg text-white transition-all hover:shadow-md hover:brightness-110"
-          >
-            Order Done
-          </button>
-        )}
-        {(activeStatus === "DONE" || activeStatus === "CANCELLED") && (
-          <button
-            onClick={() => handleChangeStatus("ONGOING")}
-            className=" mx-auto h-8 w-80 cursor-pointer rounded border border-blue-800 bg-blue-50 text-sm text-blue-800 transition-all hover:shadow-sm hover:brightness-110"
-          >
-            Reprocess Order
-          </button>
         )}
       </div>
     </Modal>
