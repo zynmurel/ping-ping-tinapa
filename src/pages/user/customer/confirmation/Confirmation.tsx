@@ -77,7 +77,7 @@ const Confirmation = () => {
       <div>
         <span className=" -mb-4 -mt-8 flex flex-row rounded-full p-5 px-10 pt-2 font-cavean text-5xl font-black text-white drop-shadow-lg sm:-mt-20 sm:mb-3 sm:bg-[#fff5dc9b] sm:px-20 sm:text-9xl ">
           <span className="  text-[#023047] ">Ping</span>-
-          <span className="  text-[#ffffff]">Ping's</span>
+          <span className="  text-[#ffffff]">Ping</span>
         </span>
       </div>{" "}
       <div className=" h-45rem w-11/12 overflow-scroll rounded-2xl bg-[#fff5dc]  p-2 sm:h-auto sm:w-7/12">
@@ -185,7 +185,7 @@ const Confirmation = () => {
                 className=" flex h-full flex-1 cursor-pointer items-center justify-center rounded-xl  bg-[#ffb300d3] drop-shadow-lg hover:bg-[#ffb300ad]"
               >
                 <span className=" text-xl font-semibold text-slate-800 sm:text-2xl">
-                  Order
+                  Place Order/s
                 </span>
 
                 <img src="/cart.svg" className="w-5 pl-2 sm:w-8" />

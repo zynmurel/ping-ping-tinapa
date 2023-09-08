@@ -42,7 +42,7 @@ const Account = () => {
         <div>
           <span className="z-10 flex flex-row font-cavean text-3xl font-black text-white drop-shadow-lg sm:text-7xl ">
             <span className="  text-[#023047] ">Ping</span>-
-            <span className="  text-[#ffffff]">Ping's</span>
+            <span className="  text-[#ffffff]">Ping</span>
           </span>
         </div>
         <div className=" flex flex-row items-center gap-2">
@@ -51,7 +51,7 @@ const Account = () => {
             className=" item-center flex h-8 cursor-pointer flex-row justify-center gap-2 rounded-full border-none  bg-[#ffc233] px-5 transition-all hover:shadow-md sm:h-auto sm:p-2 sm:px-10 "
           >
             <span className=" my-auto text-sm font-semibold text-[#023047e3] sm:text-lg">
-              Orders
+              My Orders
             </span>
             <img
               src={"/cart.svg"}

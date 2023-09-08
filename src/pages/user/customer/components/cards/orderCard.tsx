@@ -117,7 +117,7 @@ const OrderCard = () => {
           }`}
           onClick={() => router.push("/user/customer/confirmation")}
         >
-          Submit Order
+          Place Order/s
           <img src="/cart.svg" className="w-5 pl-2 sm:w-8" />
         </button>
       </div>

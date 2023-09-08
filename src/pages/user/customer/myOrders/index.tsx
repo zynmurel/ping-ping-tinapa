@@ -174,7 +174,7 @@ const OrderTable = () => {
   ];
 
   return (
-    <div className="relative min-h-screen rounded-xl bg-[#ffff] sm:px-40 sm:py-10">
+    <div className="relative min-h-screen rounded-xl  sm:px-40 sm:py-10">
       <div className=" flex w-full items-center justify-between px-2 ">
         <div className=" flex h-14 items-center justify-center gap-2 text-xl font-bold sm:h-20 sm:text-4xl">
           <MdArrowBack

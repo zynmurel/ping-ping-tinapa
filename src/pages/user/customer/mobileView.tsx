@@ -35,7 +35,7 @@ const MobileView = ({
           onClick={() => setOpenSub(true)}
           className={` mx-auto mt-4 flex w-5/6  cursor-pointer items-center justify-center rounded-full  border-none bg-[#ffa72c] p-3 text-lg font-bold text-[#1b4b62] transition-all hover:bg-[#ffaa33]  hover:drop-shadow-md`}
         >
-          Submit Order
+          Place Order/s
           <img src="/cart.svg" className="w-5 pl-2 sm:w-8" />
         </button>
         <Modal
