@@ -29,11 +29,17 @@ const columns = [
     title: "Price per Product",
     dataIndex: "productPrice",
     key: "productPrice",
+    render: (price: any) => {
+      return <>{`₱ ${price}`}</>;
+    },
   },
   {
     title: "Total Price",
     dataIndex: "totalPrice",
     key: "totalPrice",
+    render: (price: any) => {
+      return <>{`₱ ${price}`}</>;
+    },
   },
 ];
 
