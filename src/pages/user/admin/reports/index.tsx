@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, Divider } from "antd";
 import ProductPieGraph from "./components/pieGraph";
 import ProductLineGraph from "./components/lineGraph";
+import ProductReports from "./components/productReports";
 
 const AdminProducts = () => {
   const [activeStatus, setactiveStatus] = useState<string>("Charts");
@@ -46,6 +47,7 @@ const AdminProducts = () => {
                 >
                   {activeStatus === "Charts" && (
                     <div className=" flex flex-col gap-20">
+                      <ProductReports />
                       <ProductLineGraph />
                       <Divider className=" -mb-5 -mt-5" />
                       <ProductPieGraph />
