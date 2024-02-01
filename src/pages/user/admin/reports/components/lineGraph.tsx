@@ -29,6 +29,11 @@ export default function ProductLineGraph() {
       return dayjs(data.createdAt).format("YYYY") === dayjs().format("YYYY");
     })
   );
+  const yearAvailable = []
+  const yearNow = dayjs().year()
+  for(let year=2022; yearNow>=year; year++){
+    yearAvailable.push({value:year.toString(),label:year.toString()})
+  }
   useEffect(() => {
     setTransactionThisYear(
       transactionData?.filter((data) => {
@@ -74,7 +79,6 @@ export default function ProductLineGraph() {
     return sales;
   });
   const total = transactionSales.reduce((a, b) => a + b);
-  console.log(total);
   const data = {
     labels,
     datasets: [
@@ -97,8 +101,7 @@ export default function ProductLineGraph() {
             className=" w-full"
             defaultValue={year}
             options={[
-              { value: "2022", label: "2022" },
-              { value: "2023", label: "2023" },
+             ...yearAvailable
             ]}
             onChange={(e) => {
               setYear(e);
