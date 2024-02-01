@@ -9,6 +9,9 @@ const columns = [
     title: "Order Date",
     dataIndex: "date",
     key: "date",
+    render: (date: any) => {
+      return <>{`${dayjs(date).format("MMM DD YYYY")}`}</>;
+    },
   },
   {
     title: "Product Name",
@@ -22,8 +25,8 @@ const columns = [
   },
   {
     title: "Quantity",
-    dataIndex: "quamtity",
-    key: "quamtity",
+    dataIndex: "quantity",
+    key: "quantity",
   },
   {
     title: "Price per Product",

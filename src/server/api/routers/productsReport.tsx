@@ -13,7 +13,7 @@ export const orderRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      let category: ProductCategory[] = [];
+      let category: ProductCategory[] = ["PASALUBONG", "TINAPA"];
       if (input.category !== "ALL") {
         category = [input.category as ProductCategory];
       }
