@@ -31,8 +31,9 @@ const AdminLayout = ({ children }: any) => {
   };
   const logOutFunction = () => {
     return () => {
-      signOut().then(() => {
+      signOut(()=>{
         router.push("/");
+      }).then(() => {
         deleteCookie("user");
       });
     };

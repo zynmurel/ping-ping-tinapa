@@ -13,8 +13,9 @@ const Account = () => {
   const { user, isLoaded, isSignedIn } = users;
   const logOutFunction = () => {
     return () => {
-      signOut().then(() => {
+      signOut(()=>{
         router.push("/");
+      }).then(() => {
         deleteCookie("user");
       });
     };
